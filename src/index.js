@@ -49,7 +49,7 @@ const pizzaData = [
 
 function App() {
   return (
-    <div>
+    <div className="container">
       <Header></Header>
       <Menu></Menu>
       <Footer></Footer>
@@ -73,15 +73,21 @@ function Menu() {
     <main className="menu">
       <h2>Our menu</h2>
 
-      {numPizzas ? ( //{NEVER HAVE CONDITIONAL AS A NUMBER BECAUSE IT WILL RETURN A NUMBER IF FALSE VALUE}
-        <ul className="pizzas">
-          {pizzaData.map((pizza) => (
-            <Pizza
-              pizzaObj={pizza} // If you want to pass something that is not a string // WHOLE OBJECT NOT SINGLE Props like pizza='feli' cost='11'
-              key={pizza.name} //ALWAYS KEY TO IMPROVE PERFORMANCE
-            />
-          ))}
-        </ul>
+      {numPizzas ? ( //{NEVER HAVE CONDITIONAL && AS A NUMBER BECAUSE IT WILL RETURN A NUMBER IF FALSE VALUE} //REACT FRAGMENT TO INSERT MULTIPLE ELEMENTS WITHOUT ADDING A DIV
+        <React.Fragment>
+          <p>
+            Authentic Italian cuisine. 6 creative dishes to choose from.All from our stove over, all
+            organic, all delicious
+          </p>
+          <ul className="pizzas">
+            {pizzaData.map((pizza) => (
+              <Pizza
+                pizzaObj={pizza} // If you want to pass something that is not a string // WHOLE OBJECT NOT SINGLE Props like pizza='feli' cost='11'
+                key={pizza.name} //ALWAYS KEY TO IMPROVE PERFORMANCE
+              />
+            ))}
+          </ul>
+        </React.Fragment>
       ) : (
         <p>We`re srill working on our menu. Please come back later ;)</p>
       )}
@@ -89,18 +95,16 @@ function Menu() {
   );
 }
 
-function Pizza(props) {
-  console.log(props);
-
-  if (props.pizzaObj.soldOut) return null;
+function Pizza({ pizzaObj }) {
+  // if (pizzaObj.soldOut) return null;
 
   return (
-    <li className="pizza">
-      <img src={props.pizzaObj.photoName} alt={props.pizzaObj.name}></img>
+    <li className={`pizza ${pizzaObj.soldOut ? "sold-out" : ""}`}>
+      <img src={pizzaObj.photoName} alt={pizzaObj.name}></img>
       <div>
-        <h3>{props.pizzaObj.name}</h3>
-        <p>{props.pizzaObj.ingredient}</p>
-        <span>{props.pizzaObj.price}</span>
+        <h3>{pizzaObj.name}</h3>
+        <p>{pizzaObj.ingredients}</p>
+        <span>{pizzaObj.soldOut ? "SOLD OUT" : pizzaObj.price}</span>
       </div>
     </li>
   );
@@ -115,16 +119,22 @@ function Footer() {
   return (
     <footer className="footer">
       {isOpen ? (
-        <div className="order">
-          <p>We`re open until {closeHour}:00. Come visit us or order online.</p>
-          <button className="btn">Order</button>
-        </div>
+        <Order closeHour={closeHour} />
       ) : (
         <p>
           We`re happy to welcome you between {closeHour}:00 and {openHour}:00
         </p>
       )}
     </footer>
+  );
+}
+
+function Order({ closeHour, openHour, test }) {
+  return (
+    <div className="order">
+      <p>We`re open until {closeHour}:00. Come visit us or order online.</p>
+      <button className="btn">Order</button>
+    </div>
   );
 }
 
