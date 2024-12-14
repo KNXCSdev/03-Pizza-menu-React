@@ -66,24 +66,34 @@ function Header() {
 }
 
 function Menu() {
+  const pizzas = pizzaData;
+  const numPizzas = pizzas.length;
+
   return (
     <main className="menu">
       <h2>Our menu</h2>
 
-      <ul className="pizzas">
-        {pizzaData.map((pizza) => (
-          <Pizza
-            pizzaObj={pizza} // If you want to pass something that is not a string // WHOLE OBJECT NOT SINGLE Props like pizza='feli' cost='11'
-            key={pizza.name} //ALWAYS KEY TO IMPROVE PERFORMANCE
-          />
-        ))}
-      </ul>
+      {numPizzas ? ( //{NEVER HAVE CONDITIONAL AS A NUMBER BECAUSE IT WILL RETURN A NUMBER IF FALSE VALUE}
+        <ul className="pizzas">
+          {pizzaData.map((pizza) => (
+            <Pizza
+              pizzaObj={pizza} // If you want to pass something that is not a string // WHOLE OBJECT NOT SINGLE Props like pizza='feli' cost='11'
+              key={pizza.name} //ALWAYS KEY TO IMPROVE PERFORMANCE
+            />
+          ))}
+        </ul>
+      ) : (
+        <p>We`re srill working on our menu. Please come back later ;)</p>
+      )}
     </main>
   );
 }
 
 function Pizza(props) {
   console.log(props);
+
+  if (props.pizzaObj.soldOut) return null;
+
   return (
     <li className="pizza">
       <img src={props.pizzaObj.photoName} alt={props.pizzaObj.name}></img>
@@ -104,8 +114,16 @@ function Footer() {
 
   return (
     <footer className="footer">
-      {new Date().toLocaleTimeString()}{" "}
-      {isOpen === true ? "We're currently open" : "We're currenctly closed"}
+      {isOpen ? (
+        <div className="order">
+          <p>We`re open until {closeHour}:00. Come visit us or order online.</p>
+          <button className="btn">Order</button>
+        </div>
+      ) : (
+        <p>
+          We`re happy to welcome you between {closeHour}:00 and {openHour}:00
+        </p>
+      )}
     </footer>
   );
 }
